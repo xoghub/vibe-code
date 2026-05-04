@@ -1,5 +1,6 @@
 import { Elysia, t } from "elysia";
-import { loginController } from "../controllers/auth-controller";
+import { loginController, logoutController } from "../controllers/auth-controller";
+import { authMiddleware } from "../middleware/auth-middleware";
 
 export const authRouter = new Elysia()
   .post("/login", loginController, {
@@ -7,4 +8,6 @@ export const authRouter = new Elysia()
       email: t.String(),
       password: t.String()
     })
-  });
+  })
+  .use(authMiddleware)
+  .post("/logout", logoutController);

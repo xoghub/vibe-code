@@ -52,3 +52,7 @@ export const loginUser = async (data: any) => {
 
   return { accessToken, refreshToken };
 };
+
+export const logoutUser = async (token: string) => {
+  await db.delete(session).where(eq(session.accessToken, token));
+};
