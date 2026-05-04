@@ -28,7 +28,34 @@ Proyek ini adalah hasil inisialisasi awal backend menggunakan stack modern.
    ```
    Server akan berjalan di `http://localhost:3000`.
 
+## Arsitektur Proyek
+Proyek ini kini menggunakan *Layered Architecture* untuk memisahkan tanggung jawab kode:
+- `src/controllers`: Menangani logika request dan response HTTP.
+- `src/services`: Menangani logika bisnis utama dan interaksi dengan database.
+- `src/models`: Definisi skema database menggunakan Drizzle ORM.
+- `src/routes`: Mendefinisikan endpoint aplikasi.
+- `src/middleware`: Menangani interceptor seperti Autentikasi berbasis Token.
+
 ## Endpoints
-- `GET /`: Hello World.
-- `GET /users`: Mengambil daftar user dari database.
-- `POST /users`: Menambah user baru (body: `{ "name": "John", "email": "john@example.com" }`).
+
+### 1. Autentikasi & Sesi (`/`)
+- `POST /login`
+  - **Fungsi**: Masuk ke aplikasi dan mendapatkan token sesi.
+  - **Body**: `{ "email": "user@example.com", "password": "password123" }`
+  - **Response**: `accessToken` & `refreshToken`
+
+- `POST /logout`
+  - **Fungsi**: Keluar dari aplikasi dan menghapus sesi saat ini.
+  - **Headers**: `Authorization: Bearer <access-token>`
+  - **Response**: Pesan sukses atau error Unauthorized.
+
+### 2. Pengguna (`/`)
+- `POST /register`
+  - **Fungsi**: Mendaftarkan pengguna baru dengan password yang di-*hash*.
+  - **Body**: `{ "name": "John Doe", "email": "john@example.com", "password": "password123" }`
+  - **Response**: Pesan registrasi berhasil.
+
+- `GET /getProfile`
+  - **Fungsi**: Mengambil data profil pengguna yang sedang *login*.
+  - **Headers**: `Authorization: Bearer <access-token>`
+  - **Response**: Objek data pengguna (id, name, email).
