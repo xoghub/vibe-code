@@ -21,3 +21,20 @@ export const registerUser = async (data: any) => {
     password: hashedPassword,
   });
 };
+
+export const getUserProfile = async (userId: number) => {
+
+  const userRecords = await db
+    .select()
+    .from(users)
+    .where(eq(users.id, userId))
+    .limit(1);
+
+  if (userRecords.length === 0 || !userRecords) {
+    throw new Error("User Record Not Found");
+  }
+
+  // Destructure to exclude password and other sensitive fields
+  const { password, createdAt, ...profile } = userRecords[0];
+  return profile;
+};
