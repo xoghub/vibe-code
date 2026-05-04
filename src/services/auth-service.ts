@@ -29,14 +29,26 @@ export const loginUser = async (data: any) => {
   const expiredAt = new Date();
   expiredAt.setHours(expiredAt.getHours() + 24);
 
-  // Save session
-  await db.insert(session).values({
-    userId: user.id,
-    email: user.email,
-    accessToken,
-    refreshToken,
-    expiredAt,
-  });
+  // Check if session exists for this user
+  const existingSession = await db.select().from(session).where(eq(session.userId, user.id)).limit(1);
+
+  if (existingSession.length > 0) {
+    // Update existing session
+    await db.update(session).set({
+      accessToken,
+      refreshToken,
+      expiredAt,
+    }).where(eq(session.userId, user.id));
+  } else {
+    // Insert new session
+    await db.insert(session).values({
+      userId: user.id,
+      email: user.email,
+      accessToken,
+      refreshToken,
+      expiredAt,
+    });
+  }
 
   return { accessToken, refreshToken };
 };
