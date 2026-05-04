@@ -27,12 +27,14 @@ export const authMiddleware = (app: Elysia) =>
       if (sessionRecords.length === 0) {
         return {
           userId: null,
+          accessToken: null,
           authMessage: "Session not found in database for this token"
         };
       }
 
       return {
         userId: sessionRecords[0].userId,
+        accessToken: token,
         authMessage: 'User authenticated successfully'
       };
     })
