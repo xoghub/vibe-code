@@ -1,9 +1,9 @@
 {
   "name": "vibe-code",
   "version": "1.0.0",
-  "main": "src/index.ts",
+  "main": "src/app.ts",
   "scripts": {
-    "dev": "bun run --watch src/index.ts",
+    "dev": "bun run --watch src/app.ts",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio"
   },
